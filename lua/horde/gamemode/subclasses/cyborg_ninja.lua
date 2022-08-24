@@ -1,5 +1,5 @@
 SUBCLASS.PrintName = "Cyborg Ninja" -- Required
-SUBCLASS.UnlockCost = 0 -- How many skull tokens are required to unlock this class
+SUBCLASS.UnlockCost = 100 -- How many skull tokens are required to unlock this class
 SUBCLASS.ParentClass = HORDE.Class_Berserker -- Required for any new classes
 SUBCLASS.Icon = "subclasses/cyborg_ninja.png" -- Required, Subclass Icon
 SUBCLASS.Description = [[
