@@ -1,10 +1,11 @@
 PERK.PrintName = "Rules of Nature"
-PERK.Description = "Blade Mode causes melee damage to leech up to {1} health. \nGain a stack of Adrenaline on kill, up to {2}. \nAdrenaline increases your speed and damage by {3}."
+PERK.Description = "Blade Mode causes melee damage to leech up to {1} health. \nGain a stack of Adrenaline on kill, up to {2}. Adrenaline lasts {4} longer than usual. \nAdrenaline increases your speed and damage by {3}."
 PERK.Icon = "materials/perks/psycho/bestial_wrath.png"
 PERK.Params = {
     [1] = {value = 10},
 	[2] = {value = 5},
 	[3] = {value = 0.06, percent = true},
+	[4] = {value = 0.50, percent = true},
 }
 
 PERK.Hooks = {}

@@ -1,8 +1,8 @@
 PERK.PrintName = "Ripper Mode"
 PERK.Description = [[
 Unlocks Ripper Mode (Shift+E). Requires 100% Suit Charge.
-While in Ripper mode you deal 100% more damage, but your battery will rapidly drain.
-Can be stacked with Blade Mode.]]
+While in Ripper mode you deal 100% more damage and gain a 25% speed boost, 
+but your battery will rapidly drain. Can be stacked with Blade Mode.]]
 PERK.Icon = "materials/perks/bloodlust.png"
 PERK.Params = {
     [1] = {value = 2, percent = true},
@@ -55,11 +55,19 @@ PERK.Hooks.Horde_OnPlayerDamage = function (ply, npc, bonus, hitgroup, dmginfo)
     end
 end
 
+PERK.Hooks.Horde_PlayerMoveBonus = function(ply, bonus)
+    if not ply:Horde_GetPerk("totikfr_42") then return end
+	if ripperMode then
+    bonus.walkspd = bonus.walkspd * 1.25
+    bonus.sprintspd = bonus.sprintspd * 1.25
+	end
+end
+
 PERK.Hooks.PlayerTick = function (ply, mv)
 	if not ply:Horde_GetPerk("totikfr_42") then return end
     if ripperMode and CurTime() >= ripperTimer then
         ply:SetArmor(math.max(0, ply:Armor() - 1))
-        ripperTimer = CurTime() + 0.1
+        ripperTimer = CurTime() + 0.2
     end
 	if ply:Armor()<1 then
         ripperMode = false

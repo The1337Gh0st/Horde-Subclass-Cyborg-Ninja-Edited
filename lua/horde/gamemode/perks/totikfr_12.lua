@@ -3,7 +3,7 @@ PERK.Description = "{1} increased melee damage. \nMelee damage leeches a flat +{
 PERK.Icon = "materials/perks/berserk.png"
 PERK.Params = {
     [1] = {value = 0.20, percent = true},
-	[2] = {value = 3},
+	[2] = {value = 4},
 }
 
 PERK.Hooks = {}
@@ -17,6 +17,6 @@ end
 
 PERK.Hooks.Horde_OnPlayerDamagePost = function (ply, npc, bonus, hitgroup, dmginfo)
     if ply:Horde_GetPerk("totikfr_12") and (HORDE:IsSlashDamage(dmginfo) or HORDE:IsBluntDamage(dmginfo)) then
-		ply:SetArmor(math.min(100,ply:Armor()+3))
+		ply:SetArmor(math.min(100,ply:Armor()+4))
     end
 end
