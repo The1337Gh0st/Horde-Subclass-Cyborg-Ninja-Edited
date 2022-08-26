@@ -1,9 +1,9 @@
 PERK.PrintName = "Parry"
-PERK.Description = "Activating Blade Mode will give you {1} evasion for {2} seconds."
+PERK.Description = "Activating Blade Mode will give you {1} evasion for {2} second."
 PERK.Icon = "materials/perks/samurai/blade_dance.png"
 PERK.Params = {
     [1] = {value = 1, percent = true},
-	[2] = {value = 2},
+	[2] = {value = 1},
 }
 
 PERK.Hooks = {}
@@ -30,7 +30,7 @@ PERK.Hooks.PlayerSwitchFlashlight = function (ply, switchOn)
 	
     if switchOn and ply.Horde_In_Frenzy_Mode then
         ply.Horde_DoCyborgDodge = true
-		timer.Create("CyborgNinja_EndDodge" .. id, 2, 1, function ()
+		timer.Create("CyborgNinja_EndDodge" .. id, 1, 1, function ()
 		ply.Horde_DoCyborgDodge = nil
             end)
     end

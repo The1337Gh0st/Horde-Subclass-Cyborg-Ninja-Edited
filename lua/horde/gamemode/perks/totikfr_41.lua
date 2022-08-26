@@ -1,8 +1,8 @@
 PERK.PrintName = "Rifle Mechanism"
 PERK.Description =
 [[Unlocks a Special Attack (Shift + E).
-Perform an attack that deals 1000 damage and inflicts Stun.
-Leeches 25 armor. 15 second cooldown.]]
+Perform an attack that deals 1000 damage.
+Leeches 10 armor. 15 second cooldown.]]
 PERK.Icon = "materials/perks/samurai/focus_slash.png"
 
 PERK.Hooks = {}
@@ -44,8 +44,7 @@ PERK.Hooks.Horde_UseActivePerk = function (ply, dmginfo)
 		util.Effect("BloodImpact", fx)
 		
 		ent:TakeDamage(1000, ply)
-		ent:Horde_AddStun(1000)
-		ply:SetArmor(math.min(100,ply:Armor()+25))
+		ply:SetArmor(math.min(100,ply:Armor()+10))
 		return false
 		end
 	end

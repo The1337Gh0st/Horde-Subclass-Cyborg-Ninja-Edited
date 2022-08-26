@@ -4,15 +4,16 @@ COMPLEXITY: HIGH
 
 {1} increased Slashing and Blunt damage in Blade Mode. ({11} base, {2} per level, up to {3})
 {4} increased Global damage resistance. ({11} base, {5} per level, up to {6})
-{10} speed in Blade Mode. ({12} base, {5} per level, up to {13})
+{1} bonus speed while not in Blade Mode or Ripper Mode. ({11} base, {5} per level, up to {3})
 
 Press F to enter Blade Mode, replacing your flashlight.
+Blade Mode reduces your speed to {7}.
 Blade Mode uses Suit Power when active and requires 10 to activate.
 {7} increased melee damage in Blade Mode.
 
 Enemies killed in Blade Mode performs Zandatsu, giving you a {9} chance to drop a Suit Battery.
 Gain immunity to Bleeding.
-Normal attacks recharge your Suit Power.]]
+Normal attacks leech up to 4 Suit Power if you are not in Blade Mode or Ripper Mode.]]
 PERK.Icon = "materials/subclasses/cyborg_ninja.png"
 PERK.Params = {
     [1] = {percent = true, base = 0, level = 0.01, max = 0.25, classname = "Cyborg Ninja"},
@@ -62,18 +63,14 @@ end
 PERK.Hooks.Horde_OnPlayerDamage = function (ply, npc, bonus, hitgroup, dmginfo)
     if not ply:Horde_GetPerk("totikfr_base") then return end
 	if not ply.Horde_In_Frenzy_Mode then return end
-	
 
     if HORDE:IsMeleeDamage(dmginfo) then
 		bonus.increase = bonus.increase + 0.5
+		bonus.increase = bonus.increase + ply:Horde_GetPerkLevelBonus("totikfr_base")
 	if ply:Horde_GetPerk("totikfr_31") then
 		bonus.increase = bonus.increase + 0.25
 		end
-		
-		
 			
-	bonus.increase = bonus.increase + ply:Horde_GetPerkLevelBonus("totikfr_base")
-		
 end
 end
 
@@ -120,15 +117,20 @@ end
 
 PERK.Hooks.Horde_PlayerMoveBonus = function(ply, bonus)
     if ply.Horde_In_Frenzy_Mode and ply:Horde_GetPerk("totikfr_base") then
-    bonus.walkspd = bonus.walkspd * (0.5 + ply:Horde_GetPerkLevelBonus("totikfr_base"))
-    bonus.sprintspd = bonus.sprintspd * (0.5 + ply:Horde_GetPerkLevelBonus("totikfr_base"))
+    bonus.walkspd = bonus.walkspd * 0.5
+    bonus.sprintspd = bonus.sprintspd * 0.5
     end
+	
+	if ply.Horde_Ripper_Mode then return end
+	if ply:Horde_GetPerk("totikfr_base") and not ply.Horde_In_Frenzy_Mode then
+	bonus.walkspd = bonus.walkspd * (1 + ply:Horde_GetPerkLevelBonus("totikfr_base"))
+    bonus.sprintspd = bonus.sprintspd * (1 + ply:Horde_GetPerkLevelBonus("totikfr_base"))
+	end
 end
 
 --Zandatsu
 PERK.Hooks.Horde_OnNPCKilled = function(victim, killer, inflictor)
 	if not killer:Horde_GetPerk("totikfr_base") then return end
-	if killer:Horde_GetPerk("totikfr_31") then return end
     if inflictor:IsNPC() then return end -- Prevent infinite chains
 	if not killer.Horde_In_Frenzy_Mode then return end
     local p = math.random()
@@ -136,13 +138,13 @@ PERK.Hooks.Horde_OnNPCKilled = function(victim, killer, inflictor)
 	--if killer:Horde_GetPerk("totikfr_31") then c = 1 end
     if p <= c then
         local ent = ents.Create("item_battery")
-        ent:SetPos(killer:GetPos())
+        ent:SetPos(victim:GetPos())
         ent:SetOwner(killer)
         ent.Owner = killer
         ent.Inflictor = victim
         ent:Spawn()
         ent:Activate()
-        timer.Simple(15, function() if ent:IsValid() then ent:Remove() end end)
+        timer.Simple(30, function() if ent:IsValid() then ent:Remove() end end)
     end
 	--[[if killer:Horde_GetPerk("totikfr_32") and p <= 0.25 then
 		local ent2 = ents.Create("item_healthkit")
@@ -159,6 +161,7 @@ end
 --Passive FC regen
 PERK.Hooks.Horde_OnPlayerDamagePost = function (ply, npc, bonus, hitgroup, dmginfo)
 	if ply.Horde_In_Frenzy_Mode then return end
+	if ply.Horde_Ripper_Mode then return end
     if ply:Horde_GetPerk("totikfr_base") and (HORDE:IsSlashDamage(dmginfo) or HORDE:IsBluntDamage(dmginfo)) then
         local leech = math.min(4, dmginfo:GetDamage() * 0.05)
 		ply:SetArmor(math.min(100,ply:Armor()+leech))
