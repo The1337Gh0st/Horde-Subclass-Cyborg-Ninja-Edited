@@ -7,7 +7,7 @@ COMPLEXITY: HIGH
 {1} bonus speed while not in Blade Mode or Ripper Mode. ({11} base, {5} per level, up to {3})
 
 Press F to enter Blade Mode, replacing your flashlight.
-Blade Mode reduces your speed to {7}.
+Blade Mode reduces your speed to {14}.
 Blade Mode uses Suit Power when active and requires 10 to activate.
 {7} increased melee damage in Blade Mode.
 
@@ -29,6 +29,7 @@ PERK.Params = {
 	[11] = {value = 0, percent = true},
 	[12] = {value = 0.5, percent = true},
 	[13] = {value = 0.75, percent = true},
+	[14] = {value = 0.40, percent = true},
 }
 PERK.Hooks = {}
 
@@ -117,8 +118,8 @@ end
 
 PERK.Hooks.Horde_PlayerMoveBonus = function(ply, bonus)
     if ply.Horde_In_Frenzy_Mode and ply:Horde_GetPerk("totikfr_base") then
-    bonus.walkspd = bonus.walkspd * 0.5
-    bonus.sprintspd = bonus.sprintspd * 0.5
+    bonus.walkspd = bonus.walkspd * 0.4
+    bonus.sprintspd = bonus.sprintspd * 0.4
     end
 	
 	if ply.Horde_Ripper_Mode then return end
