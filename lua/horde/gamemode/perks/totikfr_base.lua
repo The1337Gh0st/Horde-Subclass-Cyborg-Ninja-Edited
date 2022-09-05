@@ -2,13 +2,14 @@ PERK.PrintName = "Cyborg Ninja Base"
 PERK.Description = [[
 COMPLEXITY: HIGH
 
-{1} increased Slashing and Blunt damage in Blade Mode. ({11} base, {2} per level, up to {3})
+{1} increased Slashing and Blunt damage. ({11} base, {2} per level, up to {3})
 {4} increased Global damage resistance. ({11} base, {5} per level, up to {6})
 {1} bonus speed while not in Blade Mode or Ripper Mode. ({11} base, {5} per level, up to {3})
 
 Press F to enter Blade Mode, replacing your flashlight.
 Blade Mode reduces your speed to {14}.
 Blade Mode uses Suit Power when active and requires 10 to activate.
+Blade Mode disables Suit Armor gain from perks while active.
 {7} increased melee damage in Blade Mode.
 
 Enemies killed in Blade Mode performs Zandatsu, giving you a {9} chance to drop a Suit Battery.
@@ -63,11 +64,13 @@ end
 
 PERK.Hooks.Horde_OnPlayerDamage = function (ply, npc, bonus, hitgroup, dmginfo)
     if not ply:Horde_GetPerk("totikfr_base") then return end
+	if HORDE:IsMeleeDamage(dmginfo) then
+	bonus.increase = bonus.increase + ply:Horde_GetPerkLevelBonus("totikfr_base")
+	end
 	if not ply.Horde_In_Frenzy_Mode then return end
 
     if HORDE:IsMeleeDamage(dmginfo) then
 		bonus.increase = bonus.increase + 0.5
-		bonus.increase = bonus.increase + ply:Horde_GetPerkLevelBonus("totikfr_base")
 	if ply:Horde_GetPerk("totikfr_31") then
 		bonus.increase = bonus.increase + 0.25
 		end
@@ -94,6 +97,8 @@ end
 
 PERK.Hooks.PlayerSwitchFlashlight = function (ply, switchOn)
     if not ply:Horde_GetPerk("totikfr_base") then return end
+	if ply.Horde_Ripper_Mode then return end
+	
     if switchOn and ply:Armor()>=10 then
         -- Enable Frenzy mode
 		ply:SetArmor(math.max(0, ply:Armor() - 10))
