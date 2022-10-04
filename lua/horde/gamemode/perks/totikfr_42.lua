@@ -78,10 +78,10 @@ PERK.Hooks.PlayerTick = function (ply, mv)
 	end
 end
 
-PERK.Hooks.Horde_PlayerMoveBonus = function(ply, bonus)
+PERK.Hooks.Horde_PlayerMoveBonus = function(ply, bonus_walk, bonus_run)
     if not ply:Horde_GetPerk("totikfr_42") then return end
 	if ply.Horde_Ripper_Mode then
-    bonus.walkspd = bonus.walkspd * 1.35
-    bonus.sprintspd = bonus.sprintspd * 1.35
+    bonus_walk.increase = bonus_walk.increase + 0.35
+    bonus_run.increase = bonus_run.increase + 0.35
 	end
 end

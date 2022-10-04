@@ -103,36 +103,39 @@ PERK.Hooks.PlayerSwitchFlashlight = function (ply, switchOn)
         -- Enable Frenzy mode
 		ply:SetArmor(math.max(0, ply:Armor() - 10))
 		sound.Play("weapons/physcannon/superphys_launch4.wav", ply:GetPos()) 
-        net.Start("Horde_SyncStatus")
-            net.WriteUInt(HORDE.Status_Frenzy_Mode, 8)
-            net.WriteUInt(1, 8)
-        net.Send(ply)
+      --  net.Start("Horde_SyncStatus")
+      --      net.WriteUInt(HORDE.Status_Frenzy_Mode, 8)
+      --      net.WriteUInt(1, 8)
+     --   net.Send(ply)
         ply.Horde_In_Frenzy_Mode = true
         ply.Horde_HealthDegenCurTime = CurTime()
         ply:ScreenFade(SCREENFADE.STAYOUT, Color(60, 60, 200, 50), 0.2, 5)
 	else
         -- Disable Frenzy mode
-        net.Start("Horde_SyncStatus")
-            net.WriteUInt(HORDE.Status_Frenzy_Mode, 8)
-            net.WriteUInt(0, 8)
-        net.Send(ply)
+       -- net.Start("Horde_SyncStatus")
+     --       net.WriteUInt(HORDE.Status_Frenzy_Mode, 8)
+     --       net.WriteUInt(0, 8)
+     --   net.Send(ply)
         ply.Horde_In_Frenzy_Mode = nil 
         ply:ScreenFade(SCREENFADE.PURGE, Color(60, 60, 200, 0), 0.1, 0.1)
     end
 end
 
-PERK.Hooks.Horde_PlayerMoveBonus = function(ply, bonus)
-    if ply.Horde_In_Frenzy_Mode and ply:Horde_GetPerk("totikfr_base") then
-    bonus.walkspd = bonus.walkspd * 0.4
-    bonus.sprintspd = bonus.sprintspd * 0.4
-    end
+PERK.Hooks.Horde_PlayerMoveBonus = function(ply, bonus_walk, bonus_run)
+    if not ply:Horde_GetPerk("totikfr_base") then return end
+	local t = ply:Horde_GetPerkLevelBonus("totikfr_base")
 	
-	if ply.Horde_Ripper_Mode then return end
-	if ply:Horde_GetPerk("totikfr_base") and not ply.Horde_In_Frenzy_Mode then
-	bonus.walkspd = bonus.walkspd * (1 + ply:Horde_GetPerkLevelBonus("totikfr_base"))
-    bonus.sprintspd = bonus.sprintspd * (1 + ply:Horde_GetPerkLevelBonus("totikfr_base"))
+	if ply.Horde_In_Frenzy_Mode then
+	bonus_walk.increase = bonus_walk.increase + (-0.6)
+    bonus_run.increase = bonus_run.increase + (-0.6)
+	end
+	
+	if ply:Horde_GetPerk("totikfr_base") and not ply.Horde_In_Frenzy_Mode and not ply.Horde_Ripper_Mode then
+	bonus_walk.increase = bonus_walk.increase + ply:Horde_GetPerkLevelBonus("totikfr_base")
+    bonus_run.increase = bonus_run.increase + ply:Horde_GetPerkLevelBonus("totikfr_base")
 	end
 end
+
 
 --Zandatsu
 PERK.Hooks.Horde_OnNPCKilled = function(victim, killer, inflictor)

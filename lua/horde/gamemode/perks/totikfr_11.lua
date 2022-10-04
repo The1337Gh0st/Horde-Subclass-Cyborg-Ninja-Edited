@@ -1,5 +1,5 @@
 PERK.PrintName = "Exoskeleton"
-PERK.Description = "{1} increased max health. \n Regenerate {3} armor per second, up to {4}. \nKills have a {5} chance to drop a Health Kit."
+PERK.Description = "{1} increased max health. \n Regenerate {3} armor per second, up to {4}."
 PERK.Icon = "materials/perks/unwavering_guard.png"
 PERK.Params = {
     [1] = {value = 0.10, percent = true},
@@ -14,7 +14,6 @@ PERK.Hooks = {}
 
 PERK.Hooks.Horde_OnSetPerk = function(ply, perk)
     if SERVER and perk == "totikfr_11" then
-        ply:SetMaxHealth(110)
         ply:SetHealth(ply:GetMaxHealth())
 		ply:Horde_SetArmorRegenEnabled(true)
 		 ply:Horde_SetArmorRegenMax(25)
@@ -24,11 +23,16 @@ end
 
 PERK.Hooks.Horde_OnUnsetPerk = function(ply, perk)
     if SERVER and perk == "totikfr_11" then
-        ply:SetMaxHealth(100)
         ply:SetHealth(ply:GetMaxHealth())
 		ply:Horde_SetArmorRegenEnabled(nil)
 		ply:Horde_SetArmorRegenMax(0)
 		ply:Horde_SetArmorRegenAmount(0)
+    end
+end
+
+PERK.Hooks.Horde_OnSetMaxHealth = function(ply, bonus)
+    if SERVER and ply:Horde_GetPerk("totikfr_11") then
+        bonus.increase = bonus.increase + 0.1
     end
 end
 
@@ -53,22 +57,5 @@ PERK.Hooks.PlayerTick = function (ply, mv)
     if ply:Horde_GetPerk("totikfr_11") then
       ply:Horde_SetArmorRegenMax(25)
 		 ply:Horde_SetArmorRegenAmount(1)
-	end
-end
-
-PERK.Hooks.Horde_OnNPCKilled = function(victim, killer, inflictor)
-	if not killer:Horde_GetPerk("totikfr_11") then return end
-    if inflictor:IsNPC() then return end -- Prevent infinite chains
-    local p = math.random()
-	local c = 0.25
-	if killer:Horde_GetPerk("totikfr_11") and p <= 0.25 then
-		local ent2 = ents.Create("item_healthkit")
-		ent2:SetPos(victim:GetPos())
-		ent2:SetOwner(killer)
-		ent2.Owner = killer
-		ent2.Inflictor = victim
-		ent2:Spawn()
-		ent2:Activate()
-		timer.Simple(30, function() if ent2:IsValid() then ent2:Remove() end end)
 	end
 end

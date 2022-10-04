@@ -28,14 +28,13 @@ end
 
 PERK.Hooks.Horde_OnSetPerk = function(ply, perk)
     if SERVER and perk == "totikfr_32" then
-        ply:Horde_SetHealthRegenEnabled(true)
         ply:Horde_SetHealthRegenPercentage(0.01)
     end
 end
 
 PERK.Hooks.Horde_OnUnsetPerk = function(ply, perk)
     if SERVER and perk == "totikfr_32" then
-        ply:Horde_SetHealthRegenEnabled(nil)
+        ply:Horde_SetHealthRegenPercentage(0)
     end
 end
 
