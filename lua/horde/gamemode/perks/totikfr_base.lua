@@ -171,7 +171,8 @@ end
 PERK.Hooks.Horde_OnPlayerDamagePost = function (ply, npc, bonus, hitgroup, dmginfo)
 	if ply.Horde_In_Frenzy_Mode then return end
 	if ply.Horde_Ripper_Mode then return end
-    if ply:Horde_GetPerk("totikfr_base") and (HORDE:IsSlashDamage(dmginfo) or HORDE:IsBluntDamage(dmginfo)) then
+	-- check for melee damage to leech armor, while also preventing hitting minions to leech armor
+    if ply:Horde_GetPerk("totikfr_base") and HORDE:IsMeleeDamage(dmginfo) and not npc:GetNWEntity("HordeOwner"):IsPlayer() then
         local leech = math.min(4, dmginfo:GetDamage() * 0.05)
 		ply:SetArmor(math.min(100,ply:Armor()+leech))
     end
