@@ -7,11 +7,13 @@ PERK.Icon = "materials/perks/samurai/focus_slash.png"
 
 PERK.Hooks = {}
 
+HORDE:RegisterStatus("Rifle_Mechanism", "materials/perks/samurai/focus_slash.png")
+
 PERK.Hooks.Horde_OnSetPerk = function(ply, perk)
     if SERVER and perk == "totikfr_41" then
         ply:Horde_SetPerkCooldown(15)
         net.Start("Horde_SyncActivePerk")
-            net.WriteUInt(HORDE.Status_Quickstep, 8)
+            net.WriteUInt(HORDE.Status_Rifle_Mechanism, 8)
             net.WriteUInt(1, 3)
         net.Send(ply)
     end
@@ -20,7 +22,7 @@ end
 PERK.Hooks.Horde_OnUnsetPerk = function(ply, perk)
     if SERVER and perk == "totikfr_41" then
         net.Start("Horde_SyncActivePerk")
-            net.WriteUInt(HORDE.Status_Quickstep, 8)
+            net.WriteUInt(HORDE.Status_Rifle_Mechanism, 8)
             net.WriteUInt(0, 3)
         net.Send(ply)
     end
@@ -44,7 +46,7 @@ PERK.Hooks.Horde_UseActivePerk = function (ply, dmginfo)
 		util.Effect("BloodImpact", fx)
 		
 		ent:TakeDamage(1000, ply)
-		ply:SetArmor(math.min(100,ply:Armor()+10))
+		ply:SetArmor(math.min(ply:GetMaxArmor(),ply:Armor()+10))
 		return false
 		end
 	end

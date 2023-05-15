@@ -27,7 +27,7 @@ SWEP.UseHands = true
 
 SWEP.ViewModel = "models/weapons/c_stunstick.mdl"
 SWEP.WorldModel = "models/weapons/w_stunbaton.mdl"
-SWEP.ViewModelFOV = 60
+SWEP.ViewModelFOV = 55
 
 SWEP.DefaultSkin = 0
 SWEP.DefaultWMSkin = 0
@@ -92,21 +92,24 @@ SWEP.Animations = {
     },
     ["draw"] = {
         Source = "draw",
-        Time = 0.5,
+        Time = 0.8,
     },
     ["bash"] = {
-        Source = {"hitcenter1","hitcenter2","hitcenter3"},
-        Time = 0.7,
+        Source = {"hitcenter1", "hitcenter2", "hitcenter3"},
+        Time = 0.75,
     },
     ["bash2"] = {
-        Source = "hitkill1",
-        Time = 1.0,
+        Source = {"misscenter2", "misscenter1"},
+        Time = 0.75,
+        LHIK = true,
+        LHIKIn = 0,
+        LHIKOut = 0.25,
     },
 }
 
 SWEP.IronSightStruct = false
 
-SWEP.ActivePos = Vector(-0, -1, 0)
+SWEP.ActivePos = Vector(-3, -10, 5)
 SWEP.ActiveAng = Angle(0, 0, 0)
 
 SWEP.BashPreparePos = Vector(0, 0, 0)
