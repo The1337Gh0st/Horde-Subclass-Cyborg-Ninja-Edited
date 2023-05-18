@@ -45,7 +45,16 @@ PERK.Hooks.Horde_UseActivePerk = function (ply, dmginfo)
 		fx:SetOrigin(hitpos)
 		util.Effect("BloodImpact", fx)
 		
-		ent:TakeDamage(1000, ply)
+		
+		local dmginfo = DamageInfo()
+                        dmginfo:SetDamage(1000)
+                        dmginfo:SetAttacker(ply)
+                        dmginfo:SetInflictor(ply)
+                        dmginfo:SetDamagePosition(ent:GetPos())
+                        dmginfo:SetDamageType(DMG_SLASH)
+                        ent:TakeDamageInfo(dmginfo)
+						
+		--ent:TakeDamage(1000, ply)
 		ply:SetArmor(math.min(ply:GetMaxArmor(),ply:Armor()+10))
 		return false
 		end
