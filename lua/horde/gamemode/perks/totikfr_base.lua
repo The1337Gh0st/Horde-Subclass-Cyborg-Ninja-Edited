@@ -136,8 +136,8 @@ end
 --Zandatsu
 PERK.Hooks.Horde_OnEnemyKilled = function(victim, killer, inflictor)
 	if not killer:Horde_GetPerk("totikfr_base") then return end
-    if inflictor:IsValid() and inflictor:IsNPC() then return end -- Prevent infinite chains
 	if not killer.Horde_In_Frenzy_Mode then return end
+    if not inflictor:IsValid() or inflictor:IsNPC() then return end -- Prevent infinite chains
     local p = math.random()
 	local c = 0.5
 	--if killer:Horde_GetPerk("totikfr_31") then c = 1 end
