@@ -3,7 +3,7 @@ PERK.Description = "{1} global damage resistance in Blade Mode. \nReduce debuff 
 PERK.Icon = "materials/perks/nanomachine.png"
 PERK.Params = {
     [1] = {value = 0.35, percent = true},
-	[2] = {value = 0.75, percent = true},
+	[2] = {value = 0.5, percent = true},
 }
 
 PERK.Hooks = {}
@@ -17,7 +17,7 @@ end
 
 PERK.Hooks.Horde_OnPlayerDebuffApply = function (ply, debuff, bonus)
     if not ply:Horde_GetPerk("totikfr_32")  then return end
-        bonus.less = bonus.less * 0.25
+        bonus.less = bonus.less * 0.5
 end
 
 
