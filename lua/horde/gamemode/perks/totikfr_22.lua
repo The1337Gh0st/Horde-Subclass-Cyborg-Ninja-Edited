@@ -8,6 +8,8 @@ PERK.Params = {
 
 PERK.Hooks = {}
 
+HORDE:RegisterStatus("Parry", "materials/perks/samurai/blade_dance.png")
+
 PERK.Hooks.Horde_OnSetPerk = function(ply, perk)
     if SERVER and perk == "totikfr_22" then
 	ply.Horde_CheckCyborgDodge = true
@@ -20,6 +22,10 @@ PERK.Hooks.Horde_OnUnsetPerk = function(ply, perk)
         ply.Horde_CheckCyborgDodge = nil
      ply.Horde_DoCyborgDodge = nil
 	 timer.Stop( "CyborgNinja_EndDodge" )
+	 net.Start("Horde_SyncStatus")
+           net.WriteUInt(HORDE.Status_Parry, 8)
+            net.WriteUInt(0, 8)
+        net.Send(ply)
     end
 end
 
@@ -29,9 +35,18 @@ PERK.Hooks.PlayerSwitchFlashlight = function (ply, switchOn)
 	local id = ply:SteamID()
 	
     if switchOn then
+		timer.Stop( "CyborgNinja_EndDodge" )
         ply.Horde_DoCyborgDodge = true
+		net.Start("Horde_SyncStatus")
+           net.WriteUInt(HORDE.Status_Parry, 8)
+            net.WriteUInt(1, 8)
+        net.Send(ply)
 		timer.Create("CyborgNinja_EndDodge" .. id, 1, 1, function ()
 		ply.Horde_DoCyborgDodge = nil
+		net.Start("Horde_SyncStatus")
+           net.WriteUInt(HORDE.Status_Parry, 8)
+            net.WriteUInt(0, 8)
+        net.Send(ply)
             end)
 		else
 		ply.Horde_DoCyborgDodge = nil

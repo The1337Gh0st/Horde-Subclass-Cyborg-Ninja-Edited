@@ -10,11 +10,12 @@ PERK.Params = {
 
 PERK.Hooks = {}
 
-HORDE:RegisterStatus("Ripper_Mode", "materials/perks/bloodlust.png")
+HORDE:RegisterStatus("Ripper_Mode", "materials/perks/bloodlust.png", nil, nil, true)
+HORDE:RegisterStatus("Jack", "materials/perks/graceful_guard.png")
 
 PERK.Hooks.Horde_OnSetPerk = function(ply, perk)
     if SERVER and perk == "totikfr_42" then
-        ply:Horde_SetPerkCooldown(5)
+        ply:Horde_SetPerkCooldown(1)
         net.Start("Horde_SyncActivePerk")
             net.WriteUInt(HORDE.Status_Ripper_Mode, 8)
             net.WriteUInt(1, 3)
@@ -34,12 +35,17 @@ end
 
 PERK.Hooks.Horde_UseActivePerk = function (ply)
     if not ply:Horde_GetPerk("totikfr_42") then return end
-	if ply.Horde_In_Frenzy_Mode then return end
-	if ply.Horde_Ripper_Mode then return end
-	if ply:Armor()<ply:GetMaxArmor() then return true end
+	if ply.Horde_In_Frenzy_Mode or ply.Horde_Ripper_Mode or ply.Horde_Ripper_Mode or ply:Armor()<ply:GetMaxArmor() then 
+	ply:EmitSound("items/suitchargeno1.wav")
+	return end
+
 
 ply.ripperMode = true
 ply.Horde_Ripper_Mode = true
+net.Start("Horde_SyncActivePerk")
+            net.WriteUInt(HORDE.Status_Jack, 8)
+            net.WriteUInt(1, 3)
+        net.Send(ply)
 sound.Play("horde/status/shock_trigger.ogg", ply:GetPos())
 ply:ScreenFade(SCREENFADE.STAYOUT, Color(180, 0, 0, 50), 0.2, 5)
 ply.ripperTimer=CurTime()
@@ -69,6 +75,10 @@ PERK.Hooks.PlayerTick = function (ply, mv)
 	if ply:Armor()<1 then
         ply.ripperMode = false
 		ply.Horde_Ripper_Mode = nil
+		net.Start("Horde_SyncActivePerk")
+            net.WriteUInt(HORDE.Status_Jack, 8)
+            net.WriteUInt(0, 3)
+        net.Send(ply)
         ply:ScreenFade(SCREENFADE.PURGE, Color(60, 60, 200, 0), 0.1, 0.1)
 	end
 	end
