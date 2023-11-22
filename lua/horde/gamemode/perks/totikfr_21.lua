@@ -3,20 +3,20 @@ PERK.Description = "Receiving damage from enemies releases a pulse that deals {1
 -- Gain immunity to Lightning damage. 
 PERK.Icon = "materials/perks/artificer/purge.png"
 PERK.Params = {
-    [1] = {value = 100},
+    [1] = {value = 150},
 	[2] = {value = 5, percent = true},
 }
 
 PERK.Hooks = {}
 
 PERK.Hooks.PlayerHurt = function(victim, attacker, healthRemaining, damageTaken)
-    if not victim:Horde_GetPerk("totikfr_21")  then return end
-    if attacker:IsNPC() then
+    if not (victim:Horde_GetPerk("totikfr_21") and victim:Alive())  then return end
+    if attacker:IsValid() and attacker:IsNPC() then
 		local dmg = DamageInfo()
             dmg:SetAttacker(victim)
             dmg:SetInflictor(victim)
             dmg:SetDamageType(DMG_SHOCK)
-            dmg:SetDamage(100)
+            dmg:SetDamage(150)
             local e = EffectData()
             e:SetOrigin(victim:GetPos())
             util.Effect("explosion_shock", e, true, true)

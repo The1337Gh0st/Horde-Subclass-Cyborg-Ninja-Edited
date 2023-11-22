@@ -12,9 +12,6 @@ PERK.Hooks = {}
 
 HORDE:RegisterStatus("Ripper_Mode", "materials/perks/bloodlust.png")
 
-local ripperMode = false
-local ripperTimer
-
 PERK.Hooks.Horde_OnSetPerk = function(ply, perk)
     if SERVER and perk == "totikfr_42" then
         ply:Horde_SetPerkCooldown(5)
@@ -37,13 +34,15 @@ end
 
 PERK.Hooks.Horde_UseActivePerk = function (ply)
     if not ply:Horde_GetPerk("totikfr_42") then return end
+	if ply.Horde_In_Frenzy_Mode then return end
+	if ply.Horde_Ripper_Mode then return end
 	if ply:Armor()<ply:GetMaxArmor() then return true end
 
-ripperMode = true
+ply.ripperMode = true
 ply.Horde_Ripper_Mode = true
 sound.Play("horde/status/shock_trigger.ogg", ply:GetPos())
 ply:ScreenFade(SCREENFADE.STAYOUT, Color(180, 0, 0, 50), 0.2, 5)
-ripperTimer=CurTime()
+ply.ripperTimer=CurTime()
 
 --timer.Simple(5, function() ripperMode = false ply:ScreenFade(SCREENFADE.PURGE, Color(60, 60, 200, 0), 0.1, 0.1) end)
 
@@ -52,7 +51,7 @@ end
 
 PERK.Hooks.Horde_OnPlayerDamage = function (ply, npc, bonus, hitgroup, dmginfo)
     if not ply:Horde_GetPerk("totikfr_42") then return end
-	if not ripperMode then return end
+	if not ply.ripperMode then return end
     if HORDE:IsMeleeDamage(dmginfo) then
         bonus.more = bonus.more * 2
 		npc:Horde_AddDebuffBuildup(HORDE.Status_Bleeding, dmginfo:GetDamage() * 0.5, ply, dmginfo:GetDamagePosition())
@@ -62,14 +61,16 @@ end
 
 PERK.Hooks.PlayerTick = function (ply, mv)
 	if not ply:Horde_GetPerk("totikfr_42") then return end
-    if ripperMode and CurTime() >= ripperTimer then
+	if SERVER then
+    if ply.ripperMode and CurTime() >= ply.ripperTimer then
         ply:SetArmor(math.max(0, ply:Armor() - 1))
-        ripperTimer = CurTime() + 0.2
+        ply.ripperTimer = CurTime() + 0.2
     end
 	if ply:Armor()<1 then
-        ripperMode = false
+        ply.ripperMode = false
 		ply.Horde_Ripper_Mode = nil
         ply:ScreenFade(SCREENFADE.PURGE, Color(60, 60, 200, 0), 0.1, 0.1)
+	end
 	end
 end
 

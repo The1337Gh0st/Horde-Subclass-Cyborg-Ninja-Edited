@@ -49,7 +49,7 @@ PERK.Hooks = {}
 
 -- some rly weird stuff here
 
-HORDE:RegisterStatus("Blade_Mode", "materials/subclasses/cyborg_ninja.png")
+HORDE:RegisterStatus("HF_Mode", "materials/subclasses/cyborg_ninja.png")
 
 PERK.Hooks.Horde_PrecomputePerkLevelBonus = function (ply)
     if SERVER then
@@ -78,6 +78,7 @@ end
 
 PERK.Hooks.PlayerTick = function (ply, mv)
 	if not ply:Horde_GetPerk("totikfr_base") then return end
+	if SERVER then
     if ply.Horde_In_Frenzy_Mode and CurTime() >= ply.Horde_HealthDegenCurTime then
         ply:SetArmor(math.max(0, ply:Armor() - 1))
         ply.Horde_HealthDegenCurTime = CurTime() + 0.25
@@ -85,11 +86,12 @@ PERK.Hooks.PlayerTick = function (ply, mv)
 		if ply:Armor()<1 then
         -- Disable Frenzy mode
         net.Start("Horde_SyncStatus")
-            net.WriteUInt(HORDE.Status_Blade_Mode, 8)
+            net.WriteUInt(HORDE.Status_HF_Mode, 8)
             net.WriteUInt(0, 8)
         net.Send(ply)
         ply.Horde_In_Frenzy_Mode = nil 
         ply:ScreenFade(SCREENFADE.PURGE, Color(60, 60, 200, 0), 0.1, 0.1)
+	end
 	end
 end
 
@@ -102,7 +104,7 @@ PERK.Hooks.PlayerSwitchFlashlight = function (ply, switchOn)
 		ply:SetArmor(math.max(0, ply:Armor() - 10))
 		sound.Play("weapons/physcannon/superphys_launch4.wav", ply:GetPos()) 
         net.Start("Horde_SyncStatus")
-           net.WriteUInt(HORDE.Status_Blade_Mode, 8)
+           net.WriteUInt(HORDE.Status_HF_Mode, 8)
             net.WriteUInt(1, 8)
         net.Send(ply)
         ply.Horde_In_Frenzy_Mode = true
@@ -111,7 +113,7 @@ PERK.Hooks.PlayerSwitchFlashlight = function (ply, switchOn)
 	else
         -- Disable Frenzy mode
         net.Start("Horde_SyncStatus")
-            net.WriteUInt(HORDE.Status_Blade_Mode, 8)
+            net.WriteUInt(HORDE.Status_HF_Mode, 8)
             net.WriteUInt(0, 8)
         net.Send(ply)
         ply.Horde_In_Frenzy_Mode = nil 
@@ -134,7 +136,7 @@ end
 --Zandatsu
 PERK.Hooks.Horde_OnEnemyKilled = function(victim, killer, inflictor)
 	if not killer:Horde_GetPerk("totikfr_base") then return end
-    if inflictor:IsNPC() then return end -- Prevent infinite chains
+    if inflictor:IsValid() and inflictor:IsNPC() then return end -- Prevent infinite chains
 	if not killer.Horde_In_Frenzy_Mode then return end
     local p = math.random()
 	local c = 0.5

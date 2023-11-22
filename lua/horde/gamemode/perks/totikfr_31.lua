@@ -1,5 +1,5 @@
 PERK.PrintName = "Sharper Blade"
-PERK.Description = "+{1} Blade Mode damage increase. \nLeech a flat {4} armor on hit."
+PERK.Description = "+{1} Blade Mode damage increase. \nLeech a flat {4} armor on hit while not in Blade Mode or Ripper Mode."
 PERK.Icon = "materials/perks/samurai/demon_strike.png"
 PERK.Params = {
     [1] = {value = 0.25, percent = true},
