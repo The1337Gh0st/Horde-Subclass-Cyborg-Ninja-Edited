@@ -15,12 +15,12 @@ Enemies killed in Blade Mode performs Zandatsu, giving you a {9} chance to drop 
 Normal attacks leech up to 4 Suit Power if you are not in Blade Mode or Ripper Mode.]]
 PERK.Icon = "materials/subclasses/cyborg_ninja.png"
 PERK.Params = {
-    [1] = {percent = true, base = 0, level = 0.01, max = 0.25, classname = "Cyborg Ninja"},
-    [2] = {value = 0.01, percent = true},
-    [3] = {value = 0.25, percent = true},
-    [4] = {percent = true, base = 0, level = 0.01, max = 0.25, classname = "Cyborg Ninja"},
-    [5] = {value = 0.01, percent = true},
-    [6] = {value = 0.25, percent = true},
+    [1] = {percent = true, base = 0, level = 0.008, max = 0.2, classname = "Cyborg Ninja"},
+    [2] = {value = 0.008, percent = true},
+    [3] = {value = 0.2, percent = true},
+    [4] = {percent = true, base = 0, level = 0.008, max = 0.2, classname = "Cyborg Ninja"},
+    [5] = {value = 0.008, percent = true},
+    [6] = {value = 0.2, percent = true},
     [7] = {value = 0.50, percent = true},
 	[8] = {value = 0.6, percent = true},
 	[9] = {value = 0.50, percent = true},
@@ -53,7 +53,7 @@ HORDE:RegisterStatus("HF_Mode", "materials/subclasses/cyborg_ninja.png")
 
 PERK.Hooks.Horde_PrecomputePerkLevelBonus = function (ply)
     if SERVER then
-        ply:Horde_SetPerkLevelBonus("totikfr_base", math.min(0.25, 0.01 * ply:Horde_GetLevel("Cyborg Ninja")))
+        ply:Horde_SetPerkLevelBonus("totikfr_base", math.min(0.2, 0.008 * ply:Horde_GetLevel("Cyborg Ninja")))
     end
 end
 
