@@ -17,9 +17,9 @@ PERK.Hooks.PlayerHurt = function(victim, attacker, healthRemaining, damageTaken)
             dmg:SetInflictor(victim)
             dmg:SetDamageType(DMG_SHOCK)
             dmg:SetDamage(150)
-            local e = EffectData()
-            e:SetOrigin(victim:GetPos())
-            util.Effect("explosion_shock", e, true, true)
+         --   local e = EffectData()
+         --   e:SetOrigin(victim:GetPos())
+         --   util.Effect("explosion_shock", e, true, true)
             util.BlastDamageInfo(dmg, victim:GetPos(), 160)
     end
 end
