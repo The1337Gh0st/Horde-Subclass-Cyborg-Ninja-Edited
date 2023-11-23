@@ -11,16 +11,19 @@ PERK.Hooks = {}
 
 PERK.Hooks.PlayerHurt = function(victim, attacker, healthRemaining, damageTaken)
     if not (victim:Horde_GetPerk("totikfr_21") and victim:Alive())  then return end
+	if victim.DischargeActive then return end
     if attacker:IsValid() and attacker:IsNPC() then
 		local dmg = DamageInfo()
             dmg:SetAttacker(victim)
             dmg:SetInflictor(victim)
             dmg:SetDamageType(DMG_SHOCK)
             dmg:SetDamage(150)
-         --   local e = EffectData()
-         --   e:SetOrigin(victim:GetPos())
-         --   util.Effect("explosion_shock", e, true, true)
+            local e = EffectData()
+           e:SetOrigin(victim:GetPos())
+            util.Effect("explosion_shock", e, true, true)
+		 victim.DischargeActive = true
             util.BlastDamageInfo(dmg, victim:GetPos(), 160)
+			victim.DischargeActive = nil
     end
 end
 
