@@ -83,7 +83,7 @@ PERK.Hooks.PlayerTick = function (ply, mv)
         ply:SetArmor(math.max(0, ply:Armor() - 1))
         ply.Horde_HealthDegenCurTime = CurTime() + 0.25
     end
-		if ply:Armor()<1 then
+		if ply:Armor()<1 or ply.Horde_In_Omni or not ply:Alive() then
         -- Disable Frenzy mode
         net.Start("Horde_SyncStatus")
             net.WriteUInt(HORDE.Status_HF_Mode, 8)
